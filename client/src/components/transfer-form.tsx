@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,6 +28,7 @@ import { Loader2 } from "lucide-react";
 
 interface TransferFormProps {
   accounts: Account[];
+  initialFromAccount?: string | null;
   onTransferComplete?: () => void;
 }
 
@@ -44,20 +45,28 @@ const transferSchema = z.object({
 
 type TransferFormValues = z.infer<typeof transferSchema>;
 
-export function TransferForm({ accounts, onTransferComplete }: TransferFormProps) {
+export function TransferForm({ accounts, initialFromAccount, onTransferComplete }: TransferFormProps) {
   const { toast } = useToast();
-  const [selectedFromAccountId, setSelectedFromAccountId] = useState<string>("");
+  const [selectedFromAccountId, setSelectedFromAccountId] = useState<string>(initialFromAccount || "");
   
   // Form definition
   const form = useForm<TransferFormValues>({
     resolver: zodResolver(transferSchema),
     defaultValues: {
-      fromAccountId: "",
+      fromAccountId: initialFromAccount || "",
       toAccountId: "",
       amount: "",
       memo: "",
     },
   });
+  
+  // Set the fromAccountId in the form when initialFromAccount changes
+  useEffect(() => {
+    if (initialFromAccount) {
+      form.setValue("fromAccountId", initialFromAccount);
+      setSelectedFromAccountId(initialFromAccount);
+    }
+  }, [initialFromAccount, form]);
   
   // Format account number to show only last 4 digits
   const formatAccountNumber = (accountNumber: string) => {

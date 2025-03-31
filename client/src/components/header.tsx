@@ -22,7 +22,7 @@ export function Header() {
 
   const navItems = [
     { name: "Accounts", path: "/" },
-    { name: "Transfers", path: "/transfers" },
+    { name: "Transfers", path: "/transfer" },
     { name: "Bills", path: "/bills" },
     { name: "Support", path: "/support" },
   ];

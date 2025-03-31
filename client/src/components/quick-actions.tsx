@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Send, CreditCard, Banknote, History } from "lucide-react";
+import { Link, useLocation } from "wouter";
 
 interface QuickActionsProps {
   onTransfer: () => void;
@@ -10,6 +11,8 @@ interface QuickActionsProps {
 }
 
 export function QuickActions({ onTransfer, onPayBills, onDeposit, onViewStatements }: QuickActionsProps) {
+  const [, navigate] = useLocation();
+  
   return (
     <Card className="bg-white rounded-xl shadow">
       <CardHeader className="pb-2">
@@ -21,7 +24,7 @@ export function QuickActions({ onTransfer, onPayBills, onDeposit, onViewStatemen
           <Button 
             variant="outline" 
             className="p-4 h-auto flex flex-col items-center justify-center space-y-2 border-neutral-200 hover:bg-neutral-50"
-            onClick={onTransfer}
+            onClick={() => navigate("/transfer")}
           >
             <Send className="h-6 w-6 text-primary mb-2" />
             <span className="text-sm">Transfer Money</span>

@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Account } from "@shared/schema";
 import { Building, CreditCard, PiggyBank } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface AccountCardProps {
   account: Account;
@@ -10,6 +11,7 @@ interface AccountCardProps {
 }
 
 export function AccountCard({ account, onViewDetails, onTransfer }: AccountCardProps) {
+  const [, navigate] = useLocation();
   // Format account number to show only last 4 digits
   const formatAccountNumber = (accountNumber: string) => {
     return `••••${accountNumber.slice(-4)}`;
@@ -78,7 +80,7 @@ export function AccountCard({ account, onViewDetails, onTransfer }: AccountCardP
           </Button>
           <Button 
             size="sm" 
-            onClick={() => onTransfer(account.id)}
+            onClick={() => navigate(`/transfer?fromAccount=${account.id}`)}
           >
             {account.accountType === 'credit' ? 'Pay' : 'Transfer'}
           </Button>

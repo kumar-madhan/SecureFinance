@@ -1,20 +1,17 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { Header } from "@/components/header";
 import { AccountCard } from "@/components/account-card";
 import { QuickActions } from "@/components/quick-actions";
 import { TransactionHistory } from "@/components/transaction-history";
-import { TransferForm } from "@/components/transfer-form";
 import { Footer } from "@/components/footer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Account, Transaction } from "@shared/schema";
-import { Loader2 } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function HomePage() {
   const { user } = useAuth();
-  const [showTransferForm, setShowTransferForm] = useState(false);
-  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
+  const [, navigate] = useLocation();
 
   // Fetch user accounts
   const { 
@@ -40,28 +37,12 @@ export default function HomePage() {
 
   // Handle transfer from specific account
   const handleTransferFromAccount = (accountId: number) => {
-    setSelectedAccountId(accountId);
-    setShowTransferForm(true);
-    // Scroll to the transfer form
-    setTimeout(() => {
-      const transferForm = document.getElementById('transfer-form');
-      if (transferForm) {
-        transferForm.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    navigate(`/transfer?fromAccount=${accountId}`);
   };
 
   // Handle quick action buttons
   const handleTransfer = () => {
-    setSelectedAccountId(null);
-    setShowTransferForm(true);
-    // Scroll to the transfer form
-    setTimeout(() => {
-      const transferForm = document.getElementById('transfer-form');
-      if (transferForm) {
-        transferForm.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    navigate('/transfer');
   };
 
   const handlePayBills = () => {
@@ -153,22 +134,6 @@ export default function HomePage() {
             />
           )}
         </div>
-        
-        {/* Transfer Form - conditionally rendered */}
-        {showTransferForm && (
-          <div id="transfer-form" className="mb-8">
-            {isLoadingAccounts ? (
-              <div className="flex items-center justify-center p-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              </div>
-            ) : (
-              <TransferForm 
-                accounts={accounts}
-                onTransferComplete={() => setShowTransferForm(false)}
-              />
-            )}
-          </div>
-        )}
       </main>
       
       <Footer />
